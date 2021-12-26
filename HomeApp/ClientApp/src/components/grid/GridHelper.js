@@ -1,4 +1,5 @@
 ﻿import $ from "jquery";
+import { Button } from "reactstrap";
 
 export function BuildGridHeader({ columns }) {
     var headerCells = [];
@@ -19,9 +20,21 @@ export function BuildGridHeader({ columns }) {
     );
 }
 
+function BuildTemplate(template, dataItem) {
+    let jsx;
+    if (typeof template === "function") {
+        jsx = template(dataItem);
+    }
+    else {
+        jsx = template;
+    }
+
+    return jsx;
+}
+
 export function BuildGridRows(gridContext) {
     var rows = [];
-    var { gridData, columns } = gridContext;
+    var { gridData, setGridData, columns, setWindowSettings } = gridContext;
 
     // Build table row for each data item
     if (gridData) {
@@ -32,31 +45,51 @@ export function BuildGridRows(gridContext) {
             // Build table cells for each prop in the data item
             // Only if the data has a prop in the column settings that are not hidden
             columns.forEach((col) => {
-                let prop = dataItem[col.Accessor];
-                if (prop !== null && prop !== undefined && !col.Hidden) {
-                    cells.push(<td style={{ textAlign: "center" }}>{prop}</td>);
-                }
-                else if ((prop === null || prop === undefined) && !col.Template) {
-                    cells.push(<td></td>);
+                if (!col.Hidden && !col.Actions) {
+                    let prop = dataItem[col.Accessor];
+
+                    if (col.Template) {
+                        cells.push(<td>{BuildTemplate(col.Template, dataItem)}</td>);
+                    }
+                    else if (prop !== null && prop !== undefined) {
+                        cells.push(<td style={{textAlign: "center"}}>{prop}</td>);
+                    }
+                    else {
+                        cells.push(<td></td>);
+                    }
                 }
             });
 
-            // Render in grid row actions
-            // TODO: Make it so that these templates show up in the correct order
-            // It's currently only rendered on the last column
-            let rowActions = columns.filter(col => col.Template);
-            if (rowActions.length) {
-                rowActions.forEach((action) => {
-                    let template;
-                    if (typeof action.Template === "function") {
-                        template = action.Template(gridContext);
-                    }
-                    else {
-                        template = action.Template;
-                    }
+            // Render grid actions at end of grid.
+            // TODO: Move this outside of for loop so this isn't recalculated each time.
+            let actionSettings = columns.filter(x => x.Actions);
+            if (actionSettings.length) {
+                let actions = actionSettings[0].Actions;
+                let buttonLocation = actionSettings[0].Position;
+                let actionButtons = [];
 
-                    cells.push(template);
+                actions.forEach((action) => {
+                    switch (action.toLowerCase()) {
+                        case "edit":
+                            actionButtons.push(<Button color="primary" onClick={(e) => EditRow(e, gridData, setWindowSettings)}>Edit</Button>);
+                            break;
+                        case "delete":
+                            actionButtons.push(<Button color="danger" onClick={(e) => DeleteRow(e, gridData, setGridData)}>Delete</Button>);
+                            break;
+                    }
                 });
+
+                switch (buttonLocation?.toLowerCase()) {
+                    case "front":
+                    case "beginning":
+                        cells = [<td><div className="row-button-group">{actionButtons}</div></td>, ...cells];
+                        break;
+                    case "end":
+                        cells.push(<td><div className="row-button-group">{actionButtons}</div></td>);
+                        break;
+                    default:
+                        cells.push(<td><div className="row-button-group">{actionButtons}</div></td>);
+                }
             }
 
             rows.push(<tr id={`row_${i}`}>{cells}</tr>);

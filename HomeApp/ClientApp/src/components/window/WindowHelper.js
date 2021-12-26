@@ -2,7 +2,6 @@
 import $ from "jquery";
 
 function SerializeFormData(e) {
-    debugger;
     var formData = {};
     var form = GetParentForm(e);
     var formInputs = $(form).find("input, textarea").toArray();

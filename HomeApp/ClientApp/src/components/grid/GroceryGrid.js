@@ -1,6 +1,4 @@
-﻿import { Button } from "reactstrap";
-import * as GridHelper from "./GridHelper.js";
-import Grid from "./Grid.js"; 
+﻿import Grid from "./Grid.js"; 
 import GroceryItemAddEdit from "../forms/GroceryItemAddEdit.js";
 
 const GroceryGrid = ({ parentId, data }) => {
@@ -34,16 +32,7 @@ const GroceryGrid = ({ parentId, data }) => {
         },
         {
             Name: "",
-            // The arguments for this function come from the grid rendering system.
-            // The grid context is passed into this function.
-            Template: ({ gridData, setGridData, setWindowSettings }) => {
-                return (
-                    <div className="row-button-group">
-                        <Button color="primary" onClick={(e) => GridHelper.EditRow(e, gridData, setWindowSettings)}>Edit</Button>
-                        <Button color="danger" onClick={(e) => GridHelper.DeleteRow(e, gridData, setGridData)}>Delete</Button>
-                    </div>
-                )
-            }
+            Actions: ["Edit", "Delete"]
         }
     ];
 
