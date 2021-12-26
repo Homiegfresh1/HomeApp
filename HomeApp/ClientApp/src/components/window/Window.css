@@ -1,0 +1,17 @@
+﻿.window {
+    width: 80%;
+    height: 80%;
+    /*width: fit-content;
+    height: fit-content;*/
+    top: 10%;
+    left: 10%;
+    position: absolute;
+    background: white;
+    border: solid black 2px;
+    border-radius: 2px;
+}
+
+.window-buttons button {
+    margin-right: 5px;
+    margin-top: 1em;
+}
