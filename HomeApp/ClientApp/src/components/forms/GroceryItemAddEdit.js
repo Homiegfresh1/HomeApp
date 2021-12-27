@@ -1,39 +1,41 @@
 ﻿import { useContext } from "react";
-import { Form, FormGroup, Input, Label } from "reactstrap";
-import { WindowContext } from "../window/Window.js";
+import { FormGroup, Input, Label } from "reactstrap";
+import { FormContext } from "../forms/Form.js";
+import { TextboxOnChange } from "../forms/FormHelper.js";
 
 const GroceryItemAddEdit = () => {
-    var windowContext = useContext(WindowContext);
+    const formContext = useContext(FormContext);
+    let { formData, setFormData, addNewItem } = formContext;
     var title = "";
-    if (windowContext.formData) {
+    if (!addNewItem) {
         title = "Edit Grocery Item";
-        var { Id, Name, Quantity, Description, Comment } = windowContext.formData;
+        var { Id, Name, Quantity, Description, Comment } = formData;
     }
     else {
         title = "New Grocery Item";
     }
 
     return (
-        <Form>
+        <>
             <h2>{title}</h2>
+            <Input type="hidden" name="Id" id="id" defaultValue={Id} />
             <FormGroup>
                 <Label for="Name">Name</Label>
-                <Input name="Name" id="name" defaultValue={Name}/>
+                <Input name="Name" id="name" defaultValue={Name} onBlur={(e) => TextboxOnChange(e, formData, setFormData)}/>
             </FormGroup>
             <FormGroup>
                 <Label for="Description">Description</Label>
-                <Input type="textarea" name="Description" id="description" defaultValue={Description} />
+                <Input type="textarea" name="Description" id="description" defaultValue={Description} onBlur={(e) => TextboxOnChange(e, formData, setFormData)}/>
             </FormGroup>
             <FormGroup>
                 <Label for="Quantity">Quantity</Label>
-                <Input type="number" name="Quantity" id="quantity" defaultValue={Quantity}/>
+                <Input type="number" name="Quantity" id="quantity" defaultValue={Quantity} onBlur={(e) => TextboxOnChange(e, formData, setFormData)}/>
             </FormGroup>
             <FormGroup>
                 <Label for="Comment">Comment</Label>
-                <Input type="textarea" name="Comment" id="comment" defaultValue={Comment} />
+                <Input type="textarea" name="Comment" id="comment" defaultValue={Comment} onBlur={(e) => TextboxOnChange(e, formData, setFormData)}/>
             </FormGroup>
-            <Input type="hidden" name="Id" id="id" defaultValue={Id} />
-        </Form>
+        </>
     );
 }
 

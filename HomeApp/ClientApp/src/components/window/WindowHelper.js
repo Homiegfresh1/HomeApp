@@ -1,26 +1,4 @@
 ﻿import { Button } from "reactstrap";
-import $ from "jquery";
-
-function SerializeFormData(e) {
-    var formData = {};
-    var form = GetParentForm(e);
-    var formInputs = $(form).find("input, textarea").toArray();
-
-    formInputs.forEach((field) => {
-        let propName = $(field).prop("name");
-        let value = $(field).val();
-
-        if (propName && value) {
-            formData[propName] = value;
-        }
-    });
-
-    return formData;
-}
-
-function GetParentForm(e) {
-    return e.target.parentElement.previousElementSibling;
-}
 
 export function MapFormDataToModel(formData, model) {
     for (let prop in formData) {
@@ -30,25 +8,18 @@ export function MapFormDataToModel(formData, model) {
     return model;
 }
 
-export function AddNewItem(e, data, setDataFunc, setWindowSettingFunc) {
-    var formData = SerializeFormData(e);
-    formData.Id = data.length;
+export function AddNewItem(e, formData, gridData, setGridData, setWindowSettings) {
+    // Later id will really come from ajax response.
+    formData.Id = gridData.length;
 
     // Insert db call here
-    $.ajax({
-        success: (resp) => {
-            setDataFunc([...data, formData]);
-            setWindowSettingFunc({ currentItem: null, visible: false });
-        }
-    });
+    setGridData([...gridData, formData]);
+    setWindowSettings({ currentItem: null, visible: false });
 }
 
-export function SaveExistingItem(e, Id, gridData, setGridData, toggleWindowSettingFunc) {
-    // Get form data
-    var formData = SerializeFormData(e);
-
+export function SaveExistingItem(e, formData, gridData, setGridData, toggleWindowSettingFunc) {
     // Get data item being edited
-    var dataItem = gridData.filter(item => item.Id === Id)[0];
+    var dataItem = gridData.filter(item => item.Id === formData.Id)[0];
     var dataItemIndex = gridData.indexOf(dataItem);
 
     // Update data item with new data.
@@ -56,23 +27,20 @@ export function SaveExistingItem(e, Id, gridData, setGridData, toggleWindowSetti
     gridData[dataItemIndex] = dataItem;
 
     // Insert db call
-    $.ajax({
-        success: (resp) => {
-            setGridData(gridData);
-            toggleWindowSettingFunc({ currentItem: null, visible: false });
-        }
-    });
+    setGridData(gridData);
+    toggleWindowSettingFunc({ currentItem: null, visible: false });
 }
 
-export function BuildWindowButtons(windowContext) {
-    var { formData, gridData, setGridData, setWindowSettingFunc } = windowContext;
+export function BuildWindowButtons(windowContext, formContext) {
+    var { gridData, setGridData, setWindowSettingFunc } = windowContext;
+    var { formData, addNewItem } = formContext
     var buttons = [];
 
-    if (formData) {
-        buttons.push(<Button onClick={(e) => SaveExistingItem(e, formData.Id, gridData, setGridData, setWindowSettingFunc)}> Save </Button>)
+    if (!addNewItem) {
+        buttons.push(<Button onClick={(e) => SaveExistingItem(e, formData, gridData, setGridData, setWindowSettingFunc)}> Save </Button>);
     }
     else {
-        buttons.push(<Button onClick={(e) => AddNewItem(e, gridData, setGridData, setWindowSettingFunc)}> Save </Button>);
+        buttons.push(<Button onClick={(e) => AddNewItem(e, formData, gridData, setGridData, setWindowSettingFunc)}> Save </Button>);
     }
 
     buttons.push(<Button onClick={() => setWindowSettingFunc({ currentItem: null, visible: false })}> Cancel </Button>);

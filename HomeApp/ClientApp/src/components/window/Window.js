@@ -21,7 +21,7 @@ const Window = ({ children, setWindowSettingFunc, gridData, setGridData, formDat
                     {/*<h2>{title}</h2>*/}
                     <WindowContext.Provider value={windowContextValue}>
                         {children}
-                        {WindowHelper.BuildWindowButtons(windowContextValue)}
+                        {/*{WindowHelper.BuildWindowButtons(windowContextValue)}*/}
                     </WindowContext.Provider>
                 </Container>
             </div>

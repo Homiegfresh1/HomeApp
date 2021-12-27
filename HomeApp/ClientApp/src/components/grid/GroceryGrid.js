@@ -1,9 +1,14 @@
 ﻿import Grid from "./Grid.js"; 
 import GroceryItemAddEdit from "../forms/GroceryItemAddEdit.js";
+import Form from "../forms/Form.js";
 
 const GroceryGrid = ({ parentId, data }) => {
     // Detail form
-    const form = <GroceryItemAddEdit />;
+    /*const form = <GroceryItemAddEdit />;*/
+    const form =
+        <Form>
+            <GroceryItemAddEdit />
+        </Form>;
 
     // Test data
     let groceries = data ?? [];
