@@ -5,29 +5,17 @@ import Window from "../window/Window.js";
 import React from "react";
 import "./Grid.css";
 
-const GridContext = React.createContext();
+export const GridContext = React.createContext();
 
-const Grid = ({ autobind, addNewButtonText, dataSourceOptions, columnOptions, data, form, windowTitle }) => {
-    let initStateValue = [];
-    // Use data passed into grid as init data.
-    if (data && data.length) {
-        initStateValue = data;
-    }
-    else if (autobind) {
-        //let readUrl = dataSourceOptions.read.url;
-        // Execute read and use the returned data as init value for state.
-        initStateValue = [];
-    }
-
+const Grid = ({ addNewButtonText, columns, gridData, setGridData, form }) => {
     const [windowSettings, setWindowSettings] = useState({ currentItem: null, visible: false });
-    const [gridData, setGridData] = useState(initStateValue);
-    const columns = useMemo(() => columnOptions, [gridData]);
+    
     const gridContextValue = {
         gridData,
         setGridData,
+        columns,
         windowSettings,
-        setWindowSettings,
-        columns
+        setWindowSettings
     }
 
     return (
@@ -35,7 +23,7 @@ const Grid = ({ autobind, addNewButtonText, dataSourceOptions, columnOptions, da
             <GridContext.Provider value={gridContextValue}>
                 {
                     windowSettings.visible ?
-                        <Window formData={windowSettings.currentItem} setWindowSettingFunc={setWindowSettings} gridData={gridData} setGridData={setGridData} title={windowTitle}>
+                        <Window >
                             {form}
                         </Window> : null
                 }

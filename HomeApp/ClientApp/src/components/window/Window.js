@@ -6,23 +6,12 @@ import * as React from "react";
 
 export const WindowContext = React.createContext();
 
-const Window = ({ children, setWindowSettingFunc, gridData, setGridData, formData, title }) => {
-    var windowContextValue = {
-        formData,
-        setWindowSettingFunc,
-        gridData,
-        setGridData
-    };
-
+const Window = ({ children }) => {
     return (
         <Draggable>
             <div className="window">
                 <Container>
-                    {/*<h2>{title}</h2>*/}
-                    <WindowContext.Provider value={windowContextValue}>
-                        {children}
-                        {/*{WindowHelper.BuildWindowButtons(windowContextValue)}*/}
-                    </WindowContext.Provider>
+                    {children}
                 </Container>
             </div>
         </Draggable>

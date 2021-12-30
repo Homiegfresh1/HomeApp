@@ -1,17 +1,18 @@
-import React, { Component } from 'react';
-import { Route } from 'react-router';
-import { Layout } from './components/Layout';
-import { Home } from './components/Home';
 import './custom.css'
+import { Route } from 'react-router';
+import Layout from './components/Layout';
+import Home from './components/views/Home';
+import Groceries from './components/views/Groceries';
+import Recipes from './components/views/Recipes';
 
-export default class App extends Component {
-  static displayName = App.name;
-
-  render () {
+const App = () => {
     return (
-      <Layout>
-        <Route exact path='/' component={Home} />
-      </Layout>
+        <Layout>
+            <Route exact path='/' component={Home} />
+            <Route exact path='/Groceries' component={Groceries} />
+            <Route exact path='/Recipes' component={Recipes} />
+        </Layout>
     );
-  }
 }
+
+export default App;

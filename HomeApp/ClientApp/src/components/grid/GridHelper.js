@@ -1,5 +1,4 @@
-﻿import $ from "jquery";
-import { Button } from "reactstrap";
+﻿import { Button } from "reactstrap";
 
 export function BuildGridHeader({ columns }) {
     var headerCells = [];
@@ -71,10 +70,10 @@ export function BuildGridRows(gridContext) {
                 actions.forEach((action) => {
                     switch (action.toLowerCase()) {
                         case "edit":
-                            actionButtons.push(<Button color="primary" onClick={(e) => EditRow(e, gridData, setWindowSettings)}>Edit</Button>);
+                            actionButtons.push(<Button color="primary" onClick={(e) => EditRow(dataItem, gridData, setWindowSettings)}>Edit</Button>);
                             break;
                         case "delete":
-                            actionButtons.push(<Button color="danger" onClick={(e) => DeleteRow(e, gridData, setGridData)}>Delete</Button>);
+                            actionButtons.push(<Button color="danger" onClick={(e) => DeleteRow(dataItem, gridData, setGridData)}>Delete</Button>);
                             break;
                     }
                 });
@@ -92,7 +91,7 @@ export function BuildGridRows(gridContext) {
                 }
             }
 
-            rows.push(<tr id={`row_${i}`}>{cells}</tr>);
+            rows.push(<tr>{cells}</tr>);
         }
     }
 
@@ -103,21 +102,14 @@ export function BuildGridRows(gridContext) {
     );
 }
 
-export function DeleteRow(e, gridData, setGridData) {
-    var dataItem = GetDataItemFromRowEvent(e, gridData);
+export function DeleteRow(dataItem, gridData, setGridData) {
     gridData = gridData.filter(x => x !== dataItem);
 
     // Make call to db to delete grocery item
     setGridData(gridData);
 }
 
-function GetDataItemFromRowEvent(e, data) {
-    var index = parseInt($(e.target).closest("tr").prop("id").split("_")[1]);
-    return data[index];
-}
-
 // Event triggered when clicking edit button. Passes row data into form.
-export function EditRow(e, gridData, setWindowSettings) {
-    var dataItem = GetDataItemFromRowEvent(e, gridData);
+export function EditRow(dataItem, gridData, setWindowSettings) {
     setWindowSettings({ currentItem: dataItem, visible: true });
 }

@@ -1,18 +1,14 @@
 ﻿import Grid from "./Grid.js"; 
 import GroceryItemAddEdit from "../forms/GroceryItemAddEdit.js";
 import Form from "../forms/Form.js";
+import { useState } from "react";
 
-const GroceryGrid = ({ parentId, data }) => {
+const GroceryGrid = () => {
     // Detail form
-    /*const form = <GroceryItemAddEdit />;*/
-    const form =
-        <Form>
-            <GroceryItemAddEdit />
-        </Form>;
+    const form = <Form><GroceryItemAddEdit /></Form>;
 
-    // Test data
-    let groceries = data ?? [];
-
+    // Insert db call here
+    const [groceries, setGroceries] = useState([]);
     const columns = [
         {
             Name: "Id",
@@ -43,13 +39,10 @@ const GroceryGrid = ({ parentId, data }) => {
 
     return (
         <>
-            <h2>Grocery List</h2>
             <Grid addNewButtonText="Add New Item"
-                autobind={false}
-                columnOptions={columns}
-                data={groceries}
-                formName="GroceryItemAddEdit"
-                windowTitle="Grocery Item"
+                columns={columns}
+                gridData={groceries}
+                setGridData={setGroceries}
                 form={form}
             />
         </>
